@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>/* deep link: #b1 or ?floor=b1 opens Research Inc. B1 */ if (location.hash.toLowerCase() === "#b1" || /[?&]floor=b1\b/i.test(location.search)) location.replace("b1.html"); addEventListener("hashchange", function () { if (location.hash.toLowerCase() === "#b1") location.replace("b1.html"); });</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d1210">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="data:,">
+<title>Tendies and Dip - Trading Floor (paper money)</title>
+<style>
+:root{--bg:#0d1210;--panel:#121a17;--line:#24332c;--ink:#e8e2cf;--dim:#8f9a8f;--gold:#f2c14e;--silver:#c9d1d9;--up:#3ddc84;--dn:#ff5c5c;--amber:#ffb84d;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:12px;-webkit-text-size-adjust:100%}
+a{color:var(--gold)}
+#top{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:6px 10px;
+  padding-top:max(6px,env(safe-area-inset-top));padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));
+  background:linear-gradient(#18221d,#111915);border-bottom:2px solid #2d3f35}
+.brand{display:flex;align-items:center;gap:7px;font-weight:800;letter-spacing:.08em;white-space:nowrap}
+.logo{display:inline-grid;place-items:center;width:22px;height:22px;background:var(--gold);color:#1a1205;border:2px solid #7a5a12;font-size:10px;font-weight:900}
+.brand b{color:var(--gold);font-size:13px}
+.paper{font-size:9px;color:#111;background:#9ad19a;padding:1px 4px;border:1px solid #4c7a4c}
+.pill{font-weight:800;letter-spacing:.06em;padding:2px 8px;border:2px solid;font-size:11px;white-space:nowrap}
+.pill.live{color:#fff;background:#1a7a3c;border-color:#3ddc84}.pill.pre{color:#1b1200;background:var(--amber);border-color:#ffe0a3}
+.pill.after{color:#cfe1ff;background:#26365a;border-color:#4c6aa8}.pill.closed{color:#bbb;background:#2a2a2a;border-color:#555}
+#mkt{flex:1 1 auto;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.age{font-size:10px;color:#9fb8a8;white-space:nowrap;letter-spacing:.03em}.age.stale{color:#1b1200;background:#ffb74d;padding:1px 5px;font-weight:800}
+.stats{display:flex;gap:12px;flex-wrap:wrap;color:var(--dim);white-space:nowrap}.stats b{color:var(--ink)}
+#clock{margin-left:auto;font-weight:800;font-size:15px;color:var(--gold);letter-spacing:.05em;white-space:nowrap}
+.up{color:var(--up)!important}.dn{color:var(--dn)!important}.mut{color:var(--dim)}
+#ticker{overflow:hidden;white-space:nowrap;background:#0a0f0d;border-bottom:1px solid var(--line);height:22px;line-height:22px;font-weight:700}
+#tickInner{display:inline-block;padding-left:100%;animation:tick 60s linear infinite}
+#tickInner span{margin-right:22px}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+#main{display:block}
+#floorWrap{position:relative;background:#070a09;display:flex;justify-content:center;align-items:center;overflow:hidden}
+#floorWrap.zoomed{justify-content:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch}
+#cv{display:block;image-rendering:pixelated;image-rendering:crisp-edges;touch-action:manipulation;cursor:pointer;flex:none}
+#floorBtns{position:absolute;right:6px;top:6px;display:flex;gap:6px}
+#floorBtns button{font:inherit;font-size:10px;font-weight:800;color:var(--ink);background:#1b2722cc;border:1px solid #3a5045;padding:3px 7px}
+#panel{background:var(--panel);padding:6px 8px 20px;padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));
+  padding-bottom:max(20px,env(safe-area-inset-bottom))}
+details{border:1px solid var(--line);background:#0f1613;margin:0 0 6px}
+summary{cursor:pointer;list-style:none;padding:6px 8px;font-weight:800;letter-spacing:.1em;color:var(--gold);background:#16201b;display:flex;justify-content:space-between;align-items:center;font-size:11px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--dim)}details[open]>summary::after{content:"-"}
+summary .cnt{color:var(--dim);font-weight:600;letter-spacing:0;margin-left:auto;margin-right:8px}
+.sec{padding:6px 8px}
+.desk{border:1px solid var(--line);padding:6px;margin-bottom:6px;background:#0c120f}
+.desk h4{margin:0 0 4px;display:flex;justify-content:space-between;font-size:12px;letter-spacing:.08em}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px}
+.kv{display:flex;justify-content:space-between;gap:6px;white-space:nowrap}.kv span:first-child{color:var(--dim)}
+.badge{display:inline-block;padding:0 4px;font-size:10px;font-weight:800;border:1px solid;letter-spacing:.05em;white-space:nowrap}
+.b-trade{color:#0b1;border-color:#2a6}.b-sit{color:var(--amber);border-color:#a77a2a}.b-bench{color:#ff8a8a;border-color:#a44}
+.b-hold{color:#9cf;border-color:#468}.b-home{color:#888;border-color:#555}.b-act{color:var(--up);border-color:#2a6}
+.gate{margin-top:4px;color:var(--dim);font-size:11px}
+canvas.spark{width:100%;height:56px;display:block;background:#0a0f0d;border:1px solid var(--line);margin-top:4px}
+.row{display:flex;gap:6px;align-items:center;padding:3px 0;border-bottom:1px dotted #1f2b25}
+.row:last-child{border-bottom:0}
+.sw{width:10px;height:10px;flex:none;border:1px solid #000}
+.nm{font-weight:800;min-width:56px}
+.grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.r{text-align:right;white-space:nowrap}
+.sq{display:flex;gap:6px;padding:2px 0;line-height:1.3}.sq .t{color:var(--dim);flex:none}.sq .w{font-weight:800;flex:none}.sq .m{flex:1;min-width:0}
+.sq.amb{opacity:.55;font-style:italic}
+table{width:100%;border-collapse:collapse}td,th{padding:2px 3px;text-align:left;white-space:nowrap}th{color:var(--dim);font-weight:600;border-bottom:1px solid var(--line)}
+td.n,th.n{text-align:right}
+.lb .row .rank{width:16px;color:var(--dim)}
+.medal{display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid;vertical-align:-2px;margin-right:4px}
+.medal.s{background:#dfe6ee;border-color:#8b97a5}.medal.g{background:#ffd54a;border-color:#a87b00}
+.hof{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}.hof span{border:2px solid #a87b00;background:#2a210a;padding:1px 5px;color:var(--gold)}
+.watch{color:#9fd3ff}
+footer{color:var(--dim);font-size:10px;padding:8px 2px;line-height:1.5}
+#card{position:fixed;z-index:50;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(380px,calc(100vw - 20px));max-height:70vh;overflow:auto;
+  background:#fbf3dc;color:#1d1a12;border:3px solid #1d1a12;box-shadow:5px 5px 0 #000;padding:10px 12px;font-size:12px;line-height:1.4}
+#card.hidden{display:none}#card h3{margin:0 0 4px;font-size:15px}#card .x{position:absolute;right:8px;top:4px;font-weight:900;cursor:pointer;font-size:16px}
+#card .mut{color:#6b6450}#card table th{color:#6b6450;border-color:#c9bd9a}
+/* side by side on landscape / desktop */
+@media (min-width:760px) and (min-aspect-ratio:1/1){
+  html,body{height:100%;overflow:hidden}
+  body{display:flex;flex-direction:column}
+  #main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 390px}
+  #floorWrap{height:100%}
+  #panel{overflow-y:auto;border-left:2px solid #2d3f35;height:100%}
+  #zoomBtn{display:none}
+}
+@media (max-width:520px){#top{gap:4px 10px}.stats{gap:9px;font-size:11px}#clock{font-size:13px}.brand b{font-size:12px}
+  #mkt{flex:1 1 auto;font-size:10px;letter-spacing:.04em;white-space:nowrap;text-align:center}.age{font-size:9px}}
+</style>
+</head>
+<body>
+<header id="top">
+  <div class="brand"><span class="logo">T&amp;D</span><b>TENDIES AND DIP</b><span class="paper">PAPER $</span></div>
+  <span id="mkt" class="pill closed" title="US stock market hours (ET)">CLOSED</span>
+  <span id="age" class="age">loading...</span>
+  <div class="stats"><span>NAV <b id="nav">-</b></span><span>DAY <b id="dpl">-</b></span><span>WK <b id="wpl">-</b></span><span id="fri" class="mut"></span></div>
+  <span id="clock">--:--:-- ET</span>
+</header>
+<div id="ticker"><div id="tickInner">loading tape...</div></div>
+<div id="main">
+  <section id="floorWrap"><canvas id="cv" width="416" height="288" aria-label="Trading floor"></canvas>
+    <div id="floorBtns"><button id="b1Btn" type="button" title="Research Inc. office, one floor below" style="color:#03262c;background:#00e5ffdd;border-color:#bff8ff">B1 &#9660;</button><button id="zoomBtn" type="button">ZOOM</button></div></section>
+  <aside id="panel">
+    <details open id="s-desks"><summary>DESKS <span class="cnt" id="c-desks"></span></summary><div class="sec" id="desks"></div></details>
+    <details open id="s-squawk"><summary>SQUAWK <span class="cnt" id="c-squawk"></span></summary><div class="sec" id="squawk"></div></details>
+    <details open id="s-chat"><summary>OFFICE CHATTER <span class="cnt" id="c-chat"></span></summary><div class="sec" id="chat"></div></details>
+    <details open id="s-ri"><summary>RESEARCH INC. (FLOOR BELOW) <span class="cnt" id="c-ri"></span></summary><div class="sec" id="ri"></div></details>
+    <details open id="s-roster"><summary>ROSTER <span class="cnt" id="c-roster"></span></summary><div class="sec" id="roster"></div></details>
+    <details open id="s-uni"><summary>UNIVERSE <span class="cnt" id="c-uni"></span></summary><div class="sec" id="uni"></div></details>
+    <details open id="s-pos"><summary>POSITIONS &amp; WATCHLIST <span class="cnt" id="c-pos"></span></summary><div class="sec" id="pos"></div></details>
+    <details open id="s-trades"><summary>RECENT TRADES <span class="cnt" id="c-trades"></span></summary><div class="sec" id="trades"></div></details>
+    <details open id="s-awards"><summary>EMPLOYEE OF THE WEEK / MONTH</summary><div class="sec lb" id="awards"></div></details>
+    <details id="s-rd"><summary>R&amp;D: KNOBS + QUALIFICATION</summary><div class="sec" id="rd"></div></details>
+    <footer><a id="b1Link" href="b1.html" style="color:#00e5ff;font-weight:800">&#9660; Research Inc. B1 (floor below)</a> &middot; Simulated money only. Deterministic engine, zero tokens; this page just reads <code>state.json</code> (every 3 s live, every ~45 s on the always-on github.io copy).
+      <br><span id="upd"></span></footer>
+  </aside>
+</div>
+<div id="card" class="hidden"><span class="x" id="cardX">&times;</span><div id="cardBody"></div></div>
+<script src="floor2d.js?v=aisles2"></script>
+<script src="social.js?v=aisles1"></script>
+<script src="seasons.js?v=aisles1"></script>
+<script src="universe_panel.js?v=deskb1"></script>
+<script src="rim_common.js?v=r4"></script>
+<script src="rim_floor.js?v=aisles2"></script>
+<script src="office_life.js?v=h2"></script>
+</body>
+</html>

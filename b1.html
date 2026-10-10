@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1214">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="data:,">
+<title>Research Inc. - B1 (one floor below the trading floor)</title>
+<style>
+:root{--bg:#0d1210;--panel:#121a17;--line:#24332c;--ink:#e8e2cf;--dim:#8f9a8f;--gold:#f2c14e;--silver:#c9d1d9;--up:#3ddc84;--dn:#ff5c5c;--amber:#ffb84d;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:12px;-webkit-text-size-adjust:100%}
+a{color:var(--gold)}
+#top{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:6px 10px;
+  padding-top:max(6px,env(safe-area-inset-top));padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));
+  background:linear-gradient(#18221d,#111915);border-bottom:2px solid #2d3f35}
+.brand{display:flex;align-items:center;gap:7px;font-weight:800;letter-spacing:.08em;white-space:nowrap}
+.logo{display:inline-grid;place-items:center;width:22px;height:22px;background:var(--gold);color:#1a1205;border:2px solid #7a5a12;font-size:10px;font-weight:900}
+.brand b{color:var(--gold);font-size:13px}
+.paper{font-size:9px;color:#111;background:#9ad19a;padding:1px 4px;border:1px solid #4c7a4c}
+.pill{font-weight:800;letter-spacing:.08em;padding:2px 7px;border:2px solid;font-size:11px;white-space:nowrap}
+.pill.live{color:#fff;background:#c0202a;border-color:#ff6b6b}.pill.pre{color:#1b1200;background:var(--amber);border-color:#ffe0a3}
+.pill.after{color:#cfe1ff;background:#26365a;border-color:#4c6aa8}.pill.closed{color:#bbb;background:#2a2a2a;border-color:#555}
+.stats{display:flex;gap:12px;flex-wrap:wrap;color:var(--dim);white-space:nowrap}.stats b{color:var(--ink)}
+#clock{margin-left:auto;font-weight:800;font-size:15px;color:var(--gold);letter-spacing:.05em;white-space:nowrap}
+.up{color:var(--up)!important}.dn{color:var(--dn)!important}.mut{color:var(--dim)}
+#ticker{overflow:hidden;white-space:nowrap;background:#0a0f0d;border-bottom:1px solid var(--line);height:22px;line-height:22px;font-weight:700}
+#tickInner{display:inline-block;padding-left:100%;animation:tick 60s linear infinite}
+#tickInner span{margin-right:22px}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+#main{display:block}
+#floorWrap{position:relative;background:#070a09;display:flex;justify-content:center;align-items:center;overflow:hidden}
+#floorWrap.zoomed{justify-content:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch}
+#cv{display:block;image-rendering:pixelated;image-rendering:crisp-edges;touch-action:manipulation;cursor:pointer;flex:none}
+#floorBtns{position:absolute;right:6px;top:6px;display:flex;gap:6px}
+#floorBtns button{font:inherit;font-size:10px;font-weight:800;color:var(--ink);background:#1b2722cc;border:1px solid #3a5045;padding:3px 7px}
+#panel{background:var(--panel);padding:6px 8px 20px;padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));
+  padding-bottom:max(20px,env(safe-area-inset-bottom))}
+details{border:1px solid var(--line);background:#0f1613;margin:0 0 6px}
+summary{cursor:pointer;list-style:none;padding:6px 8px;font-weight:800;letter-spacing:.1em;color:var(--gold);background:#16201b;display:flex;justify-content:space-between;align-items:center;font-size:11px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--dim)}details[open]>summary::after{content:"-"}
+summary .cnt{color:var(--dim);font-weight:600;letter-spacing:0;margin-left:auto;margin-right:8px}
+.sec{padding:6px 8px}
+.desk{border:1px solid var(--line);padding:6px;margin-bottom:6px;background:#0c120f}
+.desk h4{margin:0 0 4px;display:flex;justify-content:space-between;font-size:12px;letter-spacing:.08em}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px}
+.kv{display:flex;justify-content:space-between;gap:6px;white-space:nowrap}.kv span:first-child{color:var(--dim)}
+.badge{display:inline-block;padding:0 4px;font-size:10px;font-weight:800;border:1px solid;letter-spacing:.05em;white-space:nowrap}
+.b-trade{color:#0b1;border-color:#2a6}.b-sit{color:var(--amber);border-color:#a77a2a}.b-bench{color:#ff8a8a;border-color:#a44}
+.b-hold{color:#9cf;border-color:#468}.b-home{color:#888;border-color:#555}.b-act{color:var(--up);border-color:#2a6}
+.gate{margin-top:4px;color:var(--dim);font-size:11px}
+canvas.spark{width:100%;height:56px;display:block;background:#0a0f0d;border:1px solid var(--line);margin-top:4px}
+.row{display:flex;gap:6px;align-items:center;padding:3px 0;border-bottom:1px dotted #1f2b25}
+.row:last-child{border-bottom:0}
+.sw{width:10px;height:10px;flex:none;border:1px solid #000}
+.nm{font-weight:800;min-width:56px}
+.grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.r{text-align:right;white-space:nowrap}
+.sq{display:flex;gap:6px;padding:2px 0;line-height:1.3}.sq .t{color:var(--dim);flex:none}.sq .w{font-weight:800;flex:none}.sq .m{flex:1;min-width:0}
+.sq.amb{opacity:.55;font-style:italic}
+table{width:100%;border-collapse:collapse}td,th{padding:2px 3px;text-align:left;white-space:nowrap}th{color:var(--dim);font-weight:600;border-bottom:1px solid var(--line)}
+td.n,th.n{text-align:right}
+.lb .row .rank{width:16px;color:var(--dim)}
+.medal{display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid;vertical-align:-2px;margin-right:4px}
+.medal.s{background:#dfe6ee;border-color:#8b97a5}.medal.g{background:#ffd54a;border-color:#a87b00}
+.hof{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}.hof span{border:2px solid #a87b00;background:#2a210a;padding:1px 5px;color:var(--gold)}
+.watch{color:#9fd3ff}
+footer{color:var(--dim);font-size:10px;padding:8px 2px;line-height:1.5}
+#card{position:fixed;z-index:50;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(380px,calc(100vw - 20px));max-height:70vh;overflow:auto;
+  background:#fbf3dc;color:#1d1a12;border:3px solid #1d1a12;box-shadow:5px 5px 0 #000;padding:10px 12px;font-size:12px;line-height:1.4}
+#card.hidden{display:none}#card h3{margin:0 0 4px;font-size:15px}#card .x{position:absolute;right:8px;top:4px;font-weight:900;cursor:pointer;font-size:16px}
+#card .mut{color:#6b6450}#card table th{color:#6b6450;border-color:#c9bd9a}
+/* side by side on landscape / desktop */
+@media (min-width:760px) and (min-aspect-ratio:1/1){
+  html,body{height:100%;overflow:hidden}
+  body{display:flex;flex-direction:column}
+  #main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 390px}
+  #floorWrap{height:100%}
+  #panel{overflow-y:auto;border-left:2px solid #2d3f35;height:100%}
+  #zoomBtn{display:none}
+}
+@media (max-width:520px){#top{gap:4px 10px}.stats{gap:9px;font-size:11px}#clock{font-size:13px}.brand b{font-size:12px}}
+
+/* ---- Research Inc. B1 additions (cyan RI accent) */
+:root{--ri:#00e5ff}
+@media (max-width:759px), (max-aspect-ratio:1/1){#floorBtns{top:auto;bottom:6px;right:auto;left:6px}}   /* phones: keep the wall boards and Nancy's office plaque visible */
+.logo.ri{background:var(--ri);color:#03262c;border-color:#007a88}
+.brand b.ri{color:var(--ri)}
+.pill.b1{color:#03262c;background:var(--ri);border-color:#bff8ff}
+.pill.shift{color:#cfe1ff;background:#123a44;border-color:#2a8a99}
+summary{color:var(--ri)}
+.upbtn{font:inherit;font-weight:800;font-size:11px;letter-spacing:.06em;color:#03262c;background:var(--ri);border:2px solid #bff8ff;padding:2px 8px;cursor:pointer;white-space:nowrap;text-decoration:none}
+#floorBtns button.up{color:#03262c;background:#00e5ffdd;border-color:#bff8ff}
+.note{white-space:pre-wrap;line-height:1.45;background:#0c1416;border-left:3px solid var(--ri);padding:6px 8px}
+.chip{display:inline-block;padding:0 5px;margin:1px 2px 1px 0;border:1px solid #2a5a62;color:#bff8ff;font-size:11px}
+.chip.av{border-color:#a44;color:#ff9a9a}.chip.h{border-color:#2a6;color:#7ee2a8}.chip.m{border-color:#a77a2a;color:var(--amber)}.chip.l{border-color:#555;color:#bbb}
+.brief{border:1px solid var(--line);padding:5px 6px;margin-bottom:5px;cursor:pointer;background:#0c1210}
+.brief:hover{border-color:var(--ri)}
+.brief .hd{font-weight:800;color:var(--ink)}.brief .pv{color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.oc{font-weight:800;font-size:10px;padding:0 4px;border:1px solid}.oc.open{color:#9cf;border-color:#468}.oc.hit{color:var(--up);border-color:#2a6}.oc.miss{color:var(--dn);border-color:#a44}.oc.other{color:#bbb;border-color:#555}
+.empty{color:var(--dim);font-style:italic}
+.wrap{white-space:normal}
+#modal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:10px}
+#modal.hidden{display:none}
+#modalBox{background:#fbf3dc;color:#1d1a12;border:3px solid #1d1a12;box-shadow:5px 5px 0 #000;width:min(720px,100%);max-height:86vh;display:flex;flex-direction:column}
+#modalHd{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:2px solid #1d1a12;font-weight:800}
+#modalHd .x{cursor:pointer;font-size:18px;font-weight:900}
+#modalBody{margin:0;padding:10px 12px;overflow:auto;white-space:pre-wrap;word-break:break-word;font:12px/1.5 var(--mono)}
+#fade{position:fixed;inset:0;z-index:80;background:#05080a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--ri);font-weight:900;letter-spacing:.15em;font-size:15px;opacity:1;transition:opacity .45s;pointer-events:none}
+#fade.off{opacity:0}
+#fade small{color:#7fbfc8;font-size:11px;letter-spacing:.1em}
+</style>
+</head>
+<body>
+<div id="fade"><span>B1 &middot; RESEARCH INC.</span><small>ONE FLOOR BELOW THE TRADING FLOOR</small></div>
+<header id="top">
+  <div class="brand"><span class="logo ri">RI</span><b class="ri">RESEARCH INC.</b><span class="pill b1">B1</span></div>
+  <span id="shiftPill" class="pill shift">SHIFTS</span>
+  <div class="stats"><span>NEXT <b id="nextShift">-</b></span><span id="countdown" class="mut"></span><span>SIGNALS <b id="sigUpd">-</b></span></div>
+  <span id="clock">--:--:-- ET</span>
+  <a class="upbtn" id="upBtn" href="index.html">&#9650; UP TO FLOOR</a>
+</header>
+<div id="ticker"><div id="tickInner">loading tape...</div></div>
+<div id="main">
+  <section id="floorWrap"><canvas id="cv" width="416" height="288" aria-label="Research Inc. B1 office"></canvas>
+    <div id="floorBtns"><button id="upBtn2" class="up" type="button">&#9650; UP</button><button id="zoomBtn" type="button">ZOOM</button></div></section>
+  <aside id="panel">
+    <details open id="s-note"><summary>ANALYST NOTE <span class="cnt" id="c-note"></span></summary><div class="sec" id="note"></div></details>
+    <details open id="s-shifts"><summary>SHIFT SCHEDULE (ET) <span class="cnt" id="c-shifts"></span></summary><div class="sec" id="shifts"></div></details>
+    <details open id="s-signals"><summary>SIGNALS.JSON <span class="cnt" id="c-signals"></span></summary><div class="sec" id="signals"></div></details>
+    <details open id="s-briefs"><summary>LATEST BRIEFS <span class="cnt" id="c-briefs"></span></summary><div class="sec" id="briefs"></div></details>
+    <details open id="s-squawk"><summary>B1 SQUAWK <span class="cnt" id="c-squawk"></span></summary><div class="sec" id="squawk"></div></details>
+    <details open id="s-staff"><summary>STAFF <span class="cnt" id="c-staff"></span></summary><div class="sec" id="staff"></div></details>
+    <details open id="s-calls"><summary>CALLS BOARD <span class="cnt" id="c-calls"></span></summary><div class="sec" id="calls"></div></details>
+    <details open id="s-lessons"><summary>LESSONS (PROOF'S WHITEBOARD) <span class="cnt" id="c-lessons"></span></summary><div class="sec" id="lessons"></div></details>
+    <details id="s-cov"><summary>WATCHLIST COVERAGE <span class="cnt" id="c-cov"></span></summary><div class="sec" id="cov"></div></details>
+    <footer>Research Inc. reads its own files in /workspace/research-inc through read-only endpoints. Nothing here places trades.
+      <br><a href="index.html">&#9650; trading floor</a> &middot; deep link: <code>b1.html</code> or <code>/#b1</code> &middot; <span id="upd"></span></footer>
+  </aside>
+</div>
+<div id="card" class="hidden"><span class="x" id="cardX">&times;</span><div id="cardBody"></div></div>
+<div id="modal" class="hidden"><div id="modalBox"><div id="modalHd"><span id="modalTitle"></span><span class="x" id="modalX">&times;</span></div><pre id="modalBody"></pre></div></div>
+<script src="b1.js?v=static1"></script>
+<script src="b1_nancy.js?v=2"></script>
+<script src="seasons.js?v=aisles1"></script>
+<script src="rim_common.js?v=r4"></script>
+<script src="rim_b1.js?v=r4"></script>
+<script src="office_life.js?v=h2"></script>
+</body>
+</html>
